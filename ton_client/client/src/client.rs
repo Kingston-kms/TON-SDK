@@ -17,13 +17,14 @@ use ::{JsonResponse, InteropContext};
 use std::collections::HashMap;
 use std::sync::{Mutex, MutexGuard};
 use types::{ApiResult, ApiError};
+use crate::serde_json::{Value, Map};
 
 fn create_handlers() -> DispatchTable {
     let mut handlers = DispatchTable::new();
     crate::setup::register(&mut handlers);
     crate::crypto::register(&mut handlers);
     crate::contracts::register(&mut handlers);
-    
+
     #[cfg(feature = "node_interaction")]
     crate::queries::register(&mut handlers);
 
@@ -91,6 +92,9 @@ impl Client {
     }
 
     pub fn json_sync_request(&mut self, context: InteropContext, method_name: String, params_json: String) -> JsonResponse {
+        if method_name == "?" {
+            return self.debug_info();
+        }
         let context = self.required_context(context);
         match context {
             Ok(context) => sync_request(context, method_name, params_json),
@@ -98,6 +102,14 @@ impl Client {
         }
     }
 
+    // Internals
+
+    fn debug_info(&self) -> JsonResponse {
+        let context_count = self.contexts.len();
+        let mut info: Map<String, Value> = Map::new();
+        info.insert("contextCount".into(), context_count.into());
+        JsonResponse::from_result(Value::Object(info).to_string())
+    }
 }
 
 
