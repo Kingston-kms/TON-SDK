@@ -1,5 +1,5 @@
 /*
-* Copyright 2018-2019 TON DEV SOLUTIONS LTD.
+* Copyright 2018-2020 TON DEV SOLUTIONS LTD.
 *
 * Licensed under the SOFTWARE EVALUATION License (the "License"); you may not use
 * this file except in compliance with the License.  You may obtain a copy of the
@@ -14,7 +14,7 @@
 
 use crate::*;
 use futures::stream::Stream;
-use ton_block::{Block as TvmBlock, BlockId, BlockProcessingStatus, GenericId};
+use ton_block::{Block as TvmBlock, BlockId, BlockProcessingStatus};
 
 #[derive(Debug)]
 pub struct Block {
@@ -33,7 +33,7 @@ impl Block {
                     Ok(None)
                 } else {
                     let block: TvmBlock = serde_json::from_value(val)
-                        .map_err(|err| SdkErrorKind::InvalidData(format!("error parsing message: {}", err)))?;
+                        .map_err(|err| SdkErrorKind::InvalidData { msg: format!("error parsing message: {}", err) } )?;
 
                     Ok(Some(Block { block }))
                 }

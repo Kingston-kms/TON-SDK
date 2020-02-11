@@ -1,5 +1,5 @@
 /*
-* Copyright 2018-2019 TON DEV SOLUTIONS LTD.
+* Copyright 2018-2020 TON DEV SOLUTIONS LTD.
 *
 * Licensed under the SOFTWARE EVALUATION License (the "License"); you may not use
 * this file except in compliance with the License.  You may obtain a copy of the
@@ -211,7 +211,7 @@ impl CryptoMnemonic for TonMnemonic {
             }
             count += 1;
         };
-        Ok(count == self.word_count)
+        Ok(count == self.word_count && Self::is_basic_seed(phrase))
     }
 
     fn seed_from_phrase_and_salt(&self, phrase: &String, salt: &String) -> ApiResult<String> {

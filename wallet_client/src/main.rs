@@ -1,5 +1,5 @@
 /*
-* Copyright 2018-2019 TON DEV SOLUTIONS LTD.
+* Copyright 2018-2020 TON DEV SOLUTIONS LTD.
 *
 * Licensed under the SOFTWARE EVALUATION License (the "License"); you may not use
 * this file except in compliance with the License.  You may obtain a copy of the
@@ -35,7 +35,7 @@ use ton_block::{
     ExternalInboundMessageHeader, CurrencyCollection, Serializable, 
     TransactionProcessingStatus, TransactionId
 };
-use ton_vm::stack::{BuilderData, IBitstring};
+use ton_types::{BuilderData, IBitstring};
 use ton_vm::types::{AccountId};
 
 const WALLET_ABI: &str = r#"{
@@ -311,7 +311,7 @@ fn call_create(current_address: &mut Option<MsgAddressInt>) {
     let keypair = Keypair::generate::<Sha512, _>(&mut csprng);
    
     // deploy wallet
-    let workchain_id = current_address.as_ref().map(|address| address.get_workchain_id()).unwrap_or(0);
+    let workchain_id = current_address.as_ref().map(|address| address.workchain_id()).unwrap_or(0);
     let wallet_address = deploy_contract_and_wait("Wallet.tvc", WALLET_ABI, "{}", &keypair, workchain_id);
     let str_address = wallet_address.get_address().to_hex_string();
 

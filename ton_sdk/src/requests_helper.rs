@@ -1,5 +1,5 @@
 /*
-* Copyright 2018-2019 TON DEV SOLUTIONS LTD.
+* Copyright 2018-2020 TON DEV SOLUTIONS LTD.
 *
 * Licensed under the SOFTWARE EVALUATION License (the "License"); you may not use
 * this file except in compliance with the License.  You may obtain a copy of the
@@ -61,10 +61,10 @@ pub fn send_message(key: &[u8], value: &[u8]) -> SdkResult<()> {
                         Ok(text) => text,
                         Err(_) => hex::encode(bytes)
                     };
-                    bail!(SdkErrorKind::InternalError(format!("Request failed: {}", text)))
+                    bail!(SdkErrorKind::InternalError { msg: format!("Request failed: {}", text) } )
                 }
             }
-            Err(err) => bail!(SdkErrorKind::InternalError(format!("Can not send request: {}", err)))
+            Err(err) => bail!(SdkErrorKind::InternalError { msg: format!("Can not send request: {}", err) } )
         }
     } else {
         bail!(SdkErrorKind::NotInitialized);

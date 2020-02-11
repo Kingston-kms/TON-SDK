@@ -1,5 +1,5 @@
 /*
-* Copyright 2018-2019 TON DEV SOLUTIONS LTD.
+* Copyright 2018-2020 TON DEV SOLUTIONS LTD.
 *
 * Licensed under the SOFTWARE EVALUATION License (the "License"); you may not use
 * this file except in compliance with the License.  You may obtain a copy of the
@@ -19,6 +19,7 @@ extern crate ton_types;
 #[macro_use]
 extern crate ton_vm;
 extern crate ton_abi;
+extern crate ton_executor;
 
 #[macro_use]
 extern crate serde_derive;
@@ -28,13 +29,14 @@ extern crate ed25519_dalek;
 extern crate sha2;
 extern crate base64;
 extern crate chrono;
+#[macro_use]
+extern crate failure;
 extern crate crc_any;
+extern crate num_traits;
 
 #[cfg(feature = "node_interaction")]
 #[macro_use]
 extern crate lazy_static;
-#[macro_use]
-extern crate error_chain;
 #[cfg(feature = "node_interaction")]
 #[macro_use]
 extern crate serde_json;
@@ -61,6 +63,7 @@ mod message;
 pub use message::*;
 
 mod local_tvm;
+pub use local_tvm::*;
 
 #[cfg(feature = "node_interaction")]
 mod transaction;
@@ -94,7 +97,7 @@ pub fn init(config: NodeClientConfig) -> SdkResult<()> {
 #[cfg(feature = "node_interaction")]
 pub fn init_json(config: &str) -> SdkResult<()> {
     init(serde_json::from_str(config)
-        .map_err(|err| SdkErrorKind::InvalidArg(format!("{}", err)))?)
+        .map_err(|err| SdkErrorKind::InvalidArg { msg: format!("{}", err) } )?)
 }
 
 /// Uninit SKD. Should be called before process

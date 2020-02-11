@@ -1,5 +1,5 @@
 /*
-* Copyright 2018-2019 TON DEV SOLUTIONS LTD.
+* Copyright 2018-2020 TON DEV SOLUTIONS LTD.
 *
 * Licensed under the SOFTWARE EVALUATION License (the "License"); you may not use
 * this file except in compliance with the License.  You may obtain a copy of the
@@ -57,7 +57,7 @@ pub struct Transaction {
     pub aborted: bool,
     pub compute: ComputePhase,
     pub storage: Option<StoragePhase>,
-    pub action: ActionPhase
+    pub action: Option<ActionPhase>
 }
 
 // The struct represents performed transaction and allows to access their properties.
@@ -75,7 +75,7 @@ impl Transaction {
                         Ok(None)
                     } else {
                         let tr: Transaction = serde_json::from_value(val)
-                            .map_err(|err| SdkErrorKind::InvalidData(format!("error parsing transaction: {}", err)))?;
+                            .map_err(|err| SdkErrorKind::InvalidData { msg: format!("error parsing transaction: {}", err) } )?;
 
                         Ok(Some(tr))
                     }
@@ -98,7 +98,7 @@ impl Transaction {
     pub fn load_in_message(&self) -> SdkResult<Box<dyn Stream<Item = Option<Message>, Error = SdkError>>> {
         match self.in_message_id() {
             Some(m) => Message::load(&m),
-            None => bail!(SdkErrorKind::InvalidOperation("transaction doesn't have inbound message".into()))
+            None => bail!(SdkErrorKind::InvalidOperation { msg: "transaction doesn't have inbound message".into() } )
         }
     }
 

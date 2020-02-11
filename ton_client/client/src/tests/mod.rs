@@ -1,5 +1,5 @@
 /*
-* Copyright 2018-2019 TON DEV SOLUTIONS LTD.
+* Copyright 2018-2020 TON DEV SOLUTIONS LTD.
 *
 * Licensed under the SOFTWARE EVALUATION License (the "License"); you may not use
 * this file except in compliance with the License.  You may obtain a copy of the
@@ -152,7 +152,7 @@ fn test_tg_mnemonic() {
         Value::String(public),
     ));
     assert_eq!(ton_public, "PuYGEX9Zreg-CX4Psz5dKehzW9qCs794oBVUKqqFO7aWAOTD");
-    let ton_phrase = "shove often foil innocent soft slim pioneer day uncle drop nephew soccer worry renew public hand word nut again dry first delay first maple";
+//    let ton_phrase = "shove often foil innocent soft slim pioneer day uncle drop nephew soccer worry renew public hand word nut again dry first delay first maple";
     let is_valid = client.request(
         "crypto.mnemonic.verify",
         json!({
@@ -164,6 +164,13 @@ fn test_tg_mnemonic() {
         "crypto.mnemonic.verify",
         json!({
             "phrase": "unit follow"
+        }),
+    ).unwrap();
+    assert_eq!(is_valid, "false");
+    let is_valid = client.request(
+        "crypto.mnemonic.verify",
+        json!({
+            "phrase": "unit unit unit unit unit unit unit unit unit unit unit unit unit unit unit unit unit unit unit unit unit unit unit unit"
         }),
     ).unwrap();
     assert_eq!(is_valid, "false");
